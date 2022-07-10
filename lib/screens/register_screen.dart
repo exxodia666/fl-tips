@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -9,6 +8,8 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  bool _passwordVisible = false;
+  bool _confirmationVisible = false;
   late TextEditingController _emailController;
   late TextEditingController _passwordController;
   late TextEditingController _confirmationController;
@@ -19,6 +20,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
     _confirmationController = TextEditingController();
+    _emailController.text = 'test@spike.com';
+    _passwordController.text = '1234567';
+    _confirmationController.text = '1234567';
   }
 
   @override
@@ -28,14 +32,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _confirmationController = TextEditingController();
     super.dispose();
   }
-//
-  void onRegisterSubmit() {
-    if (kDebugMode) {
-      print(_emailController.text);
-      print(_passwordController.text);
-      print(_confirmationController.text);
-    }
+
+
+  void toggleConfirmationVisibility() {
+    setState(() {
+      _confirmationVisible = !_confirmationVisible;
+    });
   }
+
+
+  void togglePasswordVisibility() {
+    setState(() {
+      _passwordVisible = !_passwordVisible;
+    });
+  }
+
+  void onRegisterSubmit() async {}
 
   @override
   Widget build(BuildContext context) {
@@ -60,33 +72,47 @@ class _RegisterScreenState extends State<RegisterScreen> {
             const SizedBox(height: 10),
             TextField(
               controller: _passwordController,
-              decoration: const InputDecoration(
-                suffixIcon: Icon(Icons.password_sharp),
-                //icon: Icon(Icons.password_sharp),
-                border: OutlineInputBorder(),
+              obscureText: !_passwordVisible,
+              decoration: InputDecoration(
+                suffixIcon: IconButton(
+                    onPressed: togglePasswordVisibility,
+                    icon: Icon(_passwordVisible
+                        ? Icons.visibility
+                        : Icons.visibility_off)
+                ),
+                border: const OutlineInputBorder(),
                 hintText: 'Password',
               ),
             ),
             const SizedBox(height: 10),
             TextField(
               controller: _confirmationController,
-              decoration: const InputDecoration(
-                suffixIcon: Icon(Icons.password_sharp),
-                //icon: Icon(Icons.password_sharp),
-                border: OutlineInputBorder(),
-                hintText: 'Confirmation',
+              obscureText: !_confirmationVisible,
+              decoration: InputDecoration(
+                suffixIcon: IconButton(
+                    onPressed: toggleConfirmationVisibility,
+                    icon: Icon(_confirmationVisible
+                        ? Icons.visibility
+                        : Icons.visibility_off)
+                ),
+                border: const OutlineInputBorder(),
+                hintText: 'Password',
               ),
             ),
             const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                ElevatedButton(
-                    onPressed: onRegisterSubmit,
-                    child: const Icon(Icons.send_rounded)),
+                Expanded(
+                  child: ElevatedButton(
+                      onPressed: onRegisterSubmit,
+                      child: const Text('Register')),
+                ),
               ],
-            )
+            ),
+            const SizedBox(height: 40),
           ],
+
         ),
       ),
     );

@@ -12,8 +12,6 @@ class _LoginScreenState extends State<LoginScreen> {
   late TextEditingController _passwordController;
   bool _passwordVisible = false;
 
-  get credential => null;
-
   @override
   void initState() {
     super.initState();
@@ -68,8 +66,8 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             const SizedBox(height: 10),
             TextField(
-              obscureText: !_passwordVisible,
               controller: _passwordController,
+              obscureText: !_passwordVisible,
               decoration: InputDecoration(
                 suffixIcon: IconButton(
                     onPressed: togglePasswordVisibility,
