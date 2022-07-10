@@ -1,5 +1,4 @@
 import 'package:fl_tips/screens/register_screen.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -11,12 +10,17 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   late TextEditingController _emailController;
   late TextEditingController _passwordController;
+  bool _passwordVisible = false;
+
+  get credential => null;
 
   @override
   void initState() {
     super.initState();
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
+    _emailController.text = "barry.allen@example.com";
+    _passwordController.text = "SuperSecretPassword!";
   }
 
   @override
@@ -26,18 +30,19 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  void onLoginSubmit() {
-    if (kDebugMode) {
-      print('${_emailController.text} ${_passwordController.text}');
-    }
+  void onLoginSubmit() async {
+    print('Login');
   }
 
   void onRegisterNavigate() {
-    if (kDebugMode) {
-      print('register');
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const RegisterScreen()));
-    }
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => const RegisterScreen()));
+  }
+
+  void togglePasswordVisibility() {
+    setState(() {
+      _passwordVisible = !_passwordVisible;
+    });
   }
 
   @override
@@ -63,26 +68,35 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             const SizedBox(height: 10),
             TextField(
+              obscureText: !_passwordVisible,
               controller: _passwordController,
-              decoration: const InputDecoration(
-                suffixIcon: Icon(Icons.password_sharp),
-                //icon: Icon(Icons.password_sharp),
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                suffixIcon: IconButton(
+                    onPressed: togglePasswordVisibility,
+                    icon: Icon(_passwordVisible
+                        ? Icons.visibility
+                        : Icons.visibility_off)
+                ),
+                border: const OutlineInputBorder(),
                 hintText: 'Password',
               ),
             ),
             const SizedBox(height: 10),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                ElevatedButton(
+                Expanded(
+                  child: ElevatedButton(
                     onPressed: onLoginSubmit,
-                    child: const Icon(Icons.send_rounded)),
-                ElevatedButton(
-                    onPressed: onRegisterNavigate,
-                    child: const Text('Register'))
+                    child: const Text('Login'),
+                  ),
+                ),
               ],
-            )
+            ),
+            TextButton(
+                onPressed: onRegisterNavigate,
+                child: const Text('or Register')
+            ),
+            const SizedBox(height: 40),
           ],
         ),
       ),
